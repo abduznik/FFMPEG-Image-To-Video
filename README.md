@@ -35,6 +35,8 @@ This is a Python application built with Tkinter that allows you to convert a ser
 
 ### 2. Download from Releases:
 You can download the latest executable release from the [Releases](https://github.com/abduznik/FFMPEG-Image-To-Video/releases) section of this repository.
+
+> All emojis designed by [OpenMoji](https://openmoji.org/) – the open-source emoji and icon project. License: [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/#)
 1. Go to the [Releases page](https://github.com/abduznik/FFMPEG-Image-To-Video/releases).
 2. Download the latest `.zip` or `.exe` file.
 3. Extract the contents (if it's a `.zip` file).
