@@ -1,4 +1,6 @@
 # FFMPEG-Image-To-Video
+![](favicon.png)
+
 
 This is a Python application built with Tkinter that allows you to convert a series of images into a video using FFmpeg. It provides a user-friendly graphical interface to configure various video settings.
 
@@ -36,9 +38,10 @@ This is a Python application built with Tkinter that allows you to convert a ser
 ### 2. Download from Releases:
 You can download the latest executable release from the [Releases](https://github.com/abduznik/FFMPEG-Image-To-Video/releases) section of this repository.
 
-> All emojis designed by [OpenMoji](https://openmoji.org/) – the open-source emoji and icon project. License: [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/#)
 1. Go to the [Releases page](https://github.com/abduznik/FFMPEG-Image-To-Video/releases).
 2. Download the latest `.zip` or `.exe` file.
 3. Extract the contents (if it's a `.zip` file).
 4. Ensure `ffmpeg.exe` is in the same directory as the executable.
 5. Run the executable.
+
+> All emojis designed by [OpenMoji](https://openmoji.org/) – the open-source emoji and icon project. License: [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/#)
