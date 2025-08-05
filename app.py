@@ -10,15 +10,25 @@ import queue
 
 def get_ffmpeg_path():
     if getattr(sys, 'frozen', False):
-        return os.path.join(sys._MEIPASS, "ffmpeg.exe")
+        # Path for bundled app
+        if sys.platform == 'win32':
+            return os.path.join(sys._MEIPASS, "ffmpeg.exe")
+        else:
+            return os.path.join(sys._MEIPASS, "ffmpeg")
     else:
-        return "ffmpeg.exe"
+        # Path for running from source
+        if sys.platform == 'win32':
+            return "ffmpeg.exe"
+        else:
+            return "ffmpeg"
 
-def get_icon_path():
+def get_icon_path(platform):
     if getattr(sys, 'frozen', False):
-        return os.path.join(sys._MEIPASS, "favicon.ico")
+        icon_filename = "favicon.ico" if platform == 'win32' else "favicon.png"
+        return os.path.join(sys._MEIPASS, icon_filename)
     else:
-        return "favicon.ico"
+        icon_filename = "favicon.ico" if platform == 'win32' else "favicon.png"
+        return icon_filename
 
 XFADE_TRANSITIONS = [
     "fade", "fadeblack", "fadewhite", "distance", "wipeleft", "wiperight", "wipeup", "wipedown",
@@ -39,7 +49,6 @@ def create_video_worker(q):
     randomize_transitions = randomize_transitions_var.get()
     selected_transition = selected_transition_var.get()
     selected_preset = preset_var.get()
-    crf_value = crf_var.get()
 
     if not source_dir or not dest_dir:
         q.put(("error", "Please select source and destination directories."))
@@ -59,7 +68,7 @@ def create_video_worker(q):
         return
 
     random.shuffle(image_files)
-    output_file = os.path.join(dest_dir, "output.mp4")
+    output_file = os.path.join(dest_dir, "output.webm")
 
     input_args = []
     filter_complex_parts = []
@@ -111,7 +120,8 @@ def create_video_worker(q):
         '-map', final_output_stream,
         '-preset', selected_preset,
         '-threads', '0',
-        '-crf', str(crf_value),
+        '-c:v', 'libvpx',
+        '-b:v', '1M',
         '-t', str(total_video_duration),
         '-y',
         output_file
@@ -194,7 +204,13 @@ def save_custom_transitions(window):
 
 root = tk.Tk()
 root.title("Image to Video Creator")
-root.iconbitmap(get_icon_path())
+
+if sys.platform == 'win32':
+    root.iconbitmap(get_icon_path('win32'))
+else:
+    icon = tk.PhotoImage(file=get_icon_path('linux'))
+    root.iconphoto(True, icon)
+
 sv_ttk.set_theme("dark")
 style = ttk.Style()
 style.configure("TLabel", padding=5)
@@ -210,7 +226,7 @@ fade_duration_var = tk.DoubleVar(value=0.3)
 randomize_transitions_var = tk.BooleanVar(value=False)
 selected_transition_var = tk.StringVar(value="fade")
 preset_var = tk.StringVar(value="medium")
-crf_var = tk.IntVar(value=23)
+
 selected_custom_transitions = []
 checkbox_vars = {}
 last_used_transition = None
@@ -236,16 +252,7 @@ ttk.Label(frame, text="Select Preset:").grid(row=6, column=0, sticky="w")
 preset_combobox = ttk.Combobox(frame, textvariable=preset_var, values=presets, state="readonly")
 preset_combobox.grid(row=6, column=1, sticky="w")
 
-ttk.Label(frame, text="CRF Value (Higher is worse quality):").grid(row=7, column=0, sticky="w")
-crf_scale = ttk.Scale(frame, from_=0, to=51, variable=crf_var, orient=tk.HORIZONTAL)
-crf_scale.grid(row=7, column=1, sticky="ew")
-crf_label = ttk.Label(frame, text="23")
-crf_label.grid(row=7, column=2, sticky="w")
 
-def update_crf_label(val):
-    crf_label.config(text=f"{int(float(val))}")
-
-crf_var.trace_add("write", lambda name, index, mode: update_crf_label(crf_var.get()))
 
 
 
