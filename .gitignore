@@ -1,3 +1,7 @@
 ffmpeg.exe
+ffmpeg/ffmpeg.exe
 dist/
 build/
+*.spec
+__pycache__/
+.pytest_cache/
