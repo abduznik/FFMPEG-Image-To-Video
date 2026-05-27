@@ -36,11 +36,9 @@ jobs:
         run: |
           New-Item -ItemType Directory -Path ffmpeg -Force | Out-Null
           Invoke-WebRequest -Uri "https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-win64-gpl.zip" -OutFile "$env:TEMP\ffmpeg.zip"
-          Add-Type -AssemblyName System.IO.Compression.FileSystem
-          $zip = [System.IO.Compression.ZipFile]::OpenRead("$env:TEMP\ffmpeg.zip")
-          $entry = $zip.Entries | Where-Object { $_.Name -eq "ffmpeg.exe" } | Select-Object -First 1
-          [System.IO.Compression.ZipFile]::ExtractToFile($entry, "ffmpeg\ffmpeg.exe", $true)
-          $zip.Dispose()
+          Expand-Archive -Path "$env:TEMP\ffmpeg.zip" -DestinationPath "$env:TEMP\ffmpeg_extracted" -Force
+          $exe = Get-ChildItem -Path "$env:TEMP\ffmpeg_extracted" -Recurse -Filter "ffmpeg.exe" | Select-Object -First 1
+          Copy-Item -Path $exe.FullName -Destination "ffmpeg\ffmpeg.exe" -Force
 
       - name: Build with PyInstaller
         run: |
